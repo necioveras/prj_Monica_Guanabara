@@ -3,20 +3,14 @@
 package workspaces;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.URLEncoder;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import cartago.Artifact;
 import cartago.INTERNAL_OPERATION;
@@ -71,35 +65,20 @@ public class EnvironmentWeb extends Artifact {
                 }
             }	                                 
             System.out.println(sb);
-            System.out.println(page);
-			s.close();			
-			/*File f = new File("result.html");
-			f.setWritable(true);
-			FileWriter fw = new FileWriter(f);
-			fw.write(page.toString());
-			fw.close();
-            processResults(f);*/
+            //System.out.println(page);
+            processResults(page.toString());
+			s.close();
+			
 		} catch (java.io.IOException e) { e.printStackTrace();}
 	}	
 	
 	@INTERNAL_OPERATION
-	void processResults(File f){
-		try {		
-			DocumentBuilderFactory build = DocumentBuilderFactory.newInstance();
-			build.setIgnoringComments(false);
-			build.setIgnoringElementContentWhitespace(false);
-			DocumentBuilder db;
-			db = build.newDocumentBuilder();
-			System.out.println("processando...");			
-			Document doc = db.parse(f);			
-			System.out.println("analisando...");
-			NodeList nl = doc.getElementsByTagName("srv_ida");
-			System.out.println("Encontramos " + nl.getLength() + " serviço(s) de ida.");
-			
-			} catch (ParserConfigurationException e) {e.printStackTrace();} 
-		       catch (IOException i) { i.printStackTrace();}	
-		       catch (SAXException s) {s.printStackTrace();}				
-		
+	void processResults(String s){
+		Document d = Jsoup.parse(s);
+		for (Element e : d.getElementsByAttributeValue("name", "srv_vuelta")){
+			 System.out.println("Horário de saída: " + e.parent().parent().children().get(1).html());
+			 System.out.println("Poltronas livres: " + e.parent().parent().children().get(3).html());
+		}		
 	}
 	
 	
