@@ -15,6 +15,10 @@ import org.jsoup.nodes.Element;
 import cartago.Artifact;
 import cartago.INTERNAL_OPERATION;
 import cartago.OPERATION;
+import cartago.OpFeedbackParam;
+
+import complexTypes.Itinerary;
+import complexTypes.ItineraryList;
 
 public class EnvironmentWeb extends Artifact {
 	void init() {
@@ -22,7 +26,9 @@ public class EnvironmentWeb extends Artifact {
 	}
 	
 	@OPERATION
-	void loadItineraries(int from, int to, String dateFrom, String dateTo){
+	void loadItineraries(int from, int to, String dateFrom, String dateTo, 
+			OpFeedbackParam<Integer> numberGo, OpFeedbackParam<Integer> numberReturn,
+			OpFeedbackParam<ItineraryList> listGo, OpFeedbackParam<ItineraryList> listReturn){
 		try {
 			//Socket s = new Socket("redeastor.guanabaraonline.com.br", 8443);
 			Socket s = new Socket("redeastor.guanabaraonline.com.br", 80);
@@ -46,9 +52,8 @@ public class EnvironmentWeb extends Artifact {
  
             boolean loop = true, p = false;
             StringBuffer sb = new StringBuffer();
-            StringBuffer page = new StringBuffer();
-            
- 
+            StringBuffer page = new StringBuffer();            
+            System.out.println("Recebendo dados....");
             // recupera a resposta quando ela estiver disponível
             while (loop) {
                 if (in.ready()) {
@@ -64,23 +69,33 @@ public class EnvironmentWeb extends Artifact {
                     loop = false;
                 }
             }	                                 
-            System.out.println(sb);
-            //System.out.println(page);
-            processResults(page.toString());
+            System.out.println("Dados recebidos...");
+            Document d = Jsoup.parse(page.toString());
+            System.out.println("Dados pré-processados...");
+            numberGo.set(processResults(d, "srv_ida", listGo));
+            numberReturn.set(processResults(d, "srv_vuelta", listReturn));
+            System.out.println("Dados extraídos...");
 			s.close();
 			
 		} catch (java.io.IOException e) { e.printStackTrace();}
 	}	
 	
 	@INTERNAL_OPERATION
-	void processResults(String s){
-		Document d = Jsoup.parse(s);
-		for (Element e : d.getElementsByAttributeValue("name", "srv_vuelta")){
-			 System.out.println("Horário de saída: " + e.parent().parent().children().get(1).html());
-			 System.out.println("Poltronas livres: " + e.parent().parent().children().get(3).html());
-		}		
-	}
-	
+	int processResults(Document d, String srv, OpFeedbackParam<ItineraryList> list){		
+		int count = 0;
+		ItineraryList l = new ItineraryList();		
+		for (Element e : d.getElementsByAttributeValue("name", srv)){
+			Itinerary i = new Itinerary();
+			i.setTimeToGo(e.parent().parent().children().get(1).html());
+			i.setSeat(Integer.parseInt(e.parent().parent().children().get(3).html()));
+			i.setPrice(e.parent().parent().children().get(4).html());
+			i.setService(e.parent().parent().children().get(5).html());
+			l.add(i);
+			 count++;
+		}			
+		list.set(l);
+		return count;
+	}	
 	
 	@OPERATION
 	void sendDataToGoogleTest(String q){

@@ -1,0 +1,12 @@
+MAS prj_Monica_Guanabara {
+
+	infrastructure: Centralised
+
+	environment: c4jason.CartagoEnvironment
+
+	agents:
+		monica monicaGuanabara agentArchClass c4jason.CAgentArch;
+
+	aslSourcePath:
+		"src/asl";
+}
