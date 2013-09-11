@@ -15,16 +15,17 @@
    makeArtifact("env_web", "workspaces.EnvironmentWeb", [], E);
    focus(E);
    println("Estou no ambiente Web");   
-   !monitoring.
+   !notification.
 	
 -?setupArtifact(E) : true <-
 	.wait(30);
 	!create.
 
-+!monitoring: true <-
++!notification: true <-
  	loadItineraries(31, 71, "130913", "130916", NumSrvGo, NumSrvReturn, ListGo, ListReturn);
  	!buildTwit("Itinerário de ida:", NumSrvGo, ListGo);
- 	!buildTwit("Itinerário de volta:", NumSrvReturn, ListReturn).
+ 	!buildTwit("Itinerário de volta:", NumSrvReturn, ListReturn);
+ 	!monitoring.  		
  	
 +!buildTwit(Type, Number, List): true <- 	
 	cartago.new_obj("java.lang.StringBuilder", [Type], Message);
@@ -35,12 +36,16 @@
  		cartago.invoke_obj(Itinerary, getPrice, Price);
  		cartago.invoke_obj(Itinerary, getService, Service);
  		.concat("Serviço (",I+1,") para ", Type, " Hora de Saída: ", TimeToGo, " com ", Seat, " poltronas livres a R$", Price, " tipo:", Service, Msg);
- 		cartago.invoke_obj(Message, append(Msg));
- 		internalActions.sendDMTwitter(Msg); 
- 		.wait(5000);				 
+ 		cartago.invoke_obj(Message, append(Msg)); 		
+// 		internalActions.sendDMTwitter(Msg);
+ 		cartago.invoke_obj(Message, append("<br/>"));   //para Email
+ 		.wait(10000);  //10s				 
  	};
  	cartago.invoke_obj(Message, toString, Msg);
- 	println("Mensagens enviadas:", Msg).  		
+ 	//internalActions.sendEMail(Msg);
+ 	println("Mensagem enviada por e-mail:", Msg). 	
  	
- 	
- 	
+ +!monitoring: true <-
+   println("Esperando: ",(1000 * 60)/60000, " minutos");
+ 	.wait(1000 * 60);   //6 horas
+ 	!notification.

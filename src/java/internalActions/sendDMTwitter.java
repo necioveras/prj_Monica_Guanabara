@@ -17,22 +17,24 @@ public class sendDMTwitter extends DefaultInternalAction {
     public Object execute(TransitionSystem ts, Unifier un, Term[] args) throws Exception {
         
     	StringTerm message = (StringTerm) args[0];
+    	String msg = message.getString();
     	
+    	//inserir as credenciais
     	ConfigurationBuilder cb = new ConfigurationBuilder();
     	cb.setDebugEnabled(false)
-    		.setOAuthConsumerKey("ZjCoxMWZKbIVcjoGYmbOw")
-    		.setOAuthConsumerSecret("zawGuu66gBx3iRX51PLn83WJz1TOY6IHXF4FFGSbfc")
-    		.setOAuthAccessToken("40087177-PenGKYWnoSZ1t2yTqFAGJABRrovYNlcSY3hAtBRfE")
-    		.setOAuthAccessTokenSecret("UeERqtwBonHr1AH6zHnafwZQiHoaqU7PG1AlRhf8")
-    	  	.setUser("necioveras")
-    	  	.setPassword("");
+    		.setOAuthConsumerKey("xxxxxxxxxxxxxxxxxxxxxxxxxx")
+    		.setOAuthConsumerSecret("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+    		.setOAuthAccessToken("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+    		.setOAuthAccessTokenSecret("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+    	  	.setUser("monicaguanabara")
+    	  	.setPassword("xxxxxxxxxxx");
     	
     	TwitterFactory tf = new TwitterFactory(cb.build());
-    	Twitter twitter = tf.getInstance();    	    	
-    	    	    	
-    	String msg = message.getString();
-        System.out.println("Twitando:" + msg);        	
-        twitter.sendDirectMessage(twitter.getId(), msg);    	    	
+    	Twitter twitter = tf.getInstance();    	    	    	    	    
+    	
+        System.out.println("Twitando:" + msg);      
+        
+        twitter.sendDirectMessage("necioveras", msg);    	    	
         
         return true;    	
     }
