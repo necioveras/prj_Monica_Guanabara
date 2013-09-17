@@ -22,12 +22,12 @@ public class sendDMTwitter extends DefaultInternalAction {
     	//inserir as credenciais
     	ConfigurationBuilder cb = new ConfigurationBuilder();
     	cb.setDebugEnabled(false)
-    		.setOAuthConsumerKey("xxxxxxxxxxxxxxxxxxxxxxxxxx")
-    		.setOAuthConsumerSecret("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-    		.setOAuthAccessToken("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
-    		.setOAuthAccessTokenSecret("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+    		.setOAuthConsumerKey("ALNilvpgaYoImLWZobfqtA")
+    		.setOAuthConsumerSecret("6U1QHmvr5nxwnC1BuJELZy6IGO3UDKVf8SXugEEMY")
+    		.setOAuthAccessToken("1851561631-h5Ke0elR44ZgMA7nfQYv1vB6mL3ZM1PMF1Mg0Ri")
+    		.setOAuthAccessTokenSecret("JYY6Go4BQGmdk221EIUYjzkkBgzQMVIbBKLW85QWYmg")
     	  	.setUser("monicaguanabara")
-    	  	.setPassword("xxxxxxxxxxx");
+    	  	.setPassword("MonicaMACC@2013");
     	
     	TwitterFactory tf = new TwitterFactory(cb.build());
     	Twitter twitter = tf.getInstance();    	    	    	    	    

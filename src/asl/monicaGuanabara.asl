@@ -2,6 +2,11 @@
 
 /* Initial beliefs and rules */
 
+from(31).
+to(71).
+goDay("SEX").
+returnDay("SEG").	
+
 /* Initial goals */
 
 !create.
@@ -14,15 +19,15 @@
 +?setupArtifact(E) : true <-
    makeArtifact("env_web", "workspaces.EnvironmentWeb", [], E);
    focus(E);
-   println("Estou no ambiente Web");   
-   !notification.
+   println("Estou no ambiente Web");
+   !notification.   
 	
 -?setupArtifact(E) : true <-
 	.wait(30);
 	!create.
 
-+!notification: true <-
- 	loadItineraries(31, 71, "130913", "130916", NumSrvGo, NumSrvReturn, ListGo, ListReturn);
++!notification: from(From) & to(To) <-
+ 	loadItineraries(From, To, "130911", "130916", NumSrvGo, NumSrvReturn, ListGo, ListReturn);
  	!buildTwit("Itinerário de ida:", NumSrvGo, ListGo);
  	!buildTwit("Itinerário de volta:", NumSrvReturn, ListReturn);
  	!monitoring.  		
